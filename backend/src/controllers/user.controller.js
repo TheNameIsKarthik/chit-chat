@@ -8,7 +8,7 @@ export const getRecommendedUsers = async (req, res) => {
     const currentUser = req.user;
 
     const recommendedUsers = await User.find({
-      $and: [{ _id: { $ne: currentUserId } }, { $id: { $nin: currentUser.friends } }, { isOnboarded: true }],
+      $and: [{ _id: { $ne: currentUserId } }, { _id: { $nin: currentUser.friends } }, { isOnboarded: true }],
     });
 
     res.status(200).json(recommendedUsers);
@@ -82,7 +82,7 @@ export const acceptFriendRequest = async (req, res) => {
       return res.status(400).json({ message: "Friend request not found" });
     }
 
-    if (!friendRequest.recipient.toString() !== req.user.id) {
+    if (friendRequest.recipient.toString() !== req.user.id) {
       return res.status(403).json({ message: "You are not authorized to accept this request." });
     }
 
